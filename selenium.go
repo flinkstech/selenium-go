@@ -435,6 +435,8 @@ type WebDriver interface {
 	MozAddonInstall(path string, temporary bool) (string, error)
 	// Mozilla extension to uninstall addons
 	MozAddonUninstall(addonId string) error
+	// Final profile absolute path
+	ProfilePath() string
 }
 
 // WebElement defines method supported by web elements.

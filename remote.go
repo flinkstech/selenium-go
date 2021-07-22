@@ -54,6 +54,8 @@ type remoteWD struct {
 	storedActions  Actions
 	browser        string
 	browserVersion semver.Version
+
+	profilePath string
 }
 
 // HTTPClient is the default client to use to communicate with the WebDriver
@@ -474,6 +476,7 @@ func (wd *remoteWD) NewSession() (string, error) {
 					PageLoad       float32
 					Script         float32
 				}
+				MozProfile string `json:"moz:profile"`
 			}
 
 			value := struct {
@@ -513,6 +516,7 @@ func (wd *remoteWD) NewSession() (string, error) {
 				}
 				wd.browserVersion = v
 			}
+			wd.profilePath = caps.MozProfile
 		}
 
 		return wd.id, nil
@@ -530,6 +534,11 @@ func (wd *remoteWD) SessionId() string {
 // SessionID returns the current session ID
 func (wd *remoteWD) SessionID() string {
 	return wd.id
+}
+
+// ProfilePath returns the current profile path
+func (wd *remoteWD) ProfilePath() string {
+	return wd.profilePath
 }
 
 func (wd *remoteWD) SwitchSession(sessionID string) error {
