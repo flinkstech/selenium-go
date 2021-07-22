@@ -430,6 +430,11 @@ type WebDriver interface {
 
 	//Wait works like WaitWithTimeoutAndInterval, but using the default timeout and polling interval.
 	Wait(condition Condition) error
+
+	// Mozilla extension to install addons
+	MozAddonInstall(path string, temporary bool) (string, error)
+	// Mozilla extension to uninstall addons
+	MozAddonUninstall(addonId string) error
 }
 
 // WebElement defines method supported by web elements.

@@ -638,6 +638,42 @@ func (wd *remoteWD) Get(url string) error {
 	return err
 }
 
+func (wd *remoteWD) MozAddonInstall(path string, temporary bool) (string, error) {
+	requestURL := wd.requestURL("/session/%s/moz/addon/install", wd.id)
+	params := map[string]interface{}{
+		"path":      path,
+		"temporary": temporary,
+	}
+	data, err := json.Marshal(params)
+	if err != nil {
+		return "", err
+	}
+	response, err := wd.execute("POST", requestURL, data)
+	reply := new(struct{ Value *string })
+	if err := json.Unmarshal(response, reply); err != nil {
+		return "", err
+	}
+
+	if reply.Value == nil {
+		return "", fmt.Errorf("nil return value")
+	}
+
+	return *reply.Value, nil
+}
+
+func (wd *remoteWD) MozAddonUninstall(addonId string) error {
+	requestURL := wd.requestURL("/session/%s/moz/addon/uninstall", wd.id)
+	params := map[string]interface{}{
+		"id": addonId,
+	}
+	data, err := json.Marshal(params)
+	if err != nil {
+		return err
+	}
+	_, err = wd.execute("POST", requestURL, data)
+	return err
+}
+
 func (wd *remoteWD) Forward() error {
 	return wd.voidCommand("/session/%s/forward", nil)
 }
