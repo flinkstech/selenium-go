@@ -88,6 +88,8 @@ type MobileEmulation struct {
 	// UserAgent specifies the user agent string to send to the remote web
 	// server.
 	UserAgent string `json:"userAgent,omitempty"`
+	// ClientHints specifies device attributes for emulation.
+	ClientHints *ClientHints `json:"clientHints,omitempty"`
 }
 
 // DeviceMetrics specifies device attributes for emulation.
@@ -101,6 +103,36 @@ type DeviceMetrics struct {
 	// Touch indicates whether to emulate touch events. The default is true, if
 	// unset.
 	Touch *bool `json:"touch,omitempty"`
+}
+
+// Refer
+// https://developer.chrome.com/docs/chromedriver/mobile-emulation#specifying_individual_device_attributes
+type ClientHints struct {
+	// Platform name, e.g. Android, Windows, macOS, Linux etc.
+	Platform string `json:"platform"`
+	// whether browser should request a mobile version of the site.
+	Mobile bool `json:"mobile"`
+	// Browser brand with a major version.
+	Brands []Brand `json:"brands"`
+	// Browser brand with full version info.
+	FullVersionList []Brand `json:"fullVersionList"`
+	// Platform Version
+	PlatformVersion string `json:"platformVersion"`
+	// device model name, e.g. Pixel 4, iPhone 12 Pro etc.
+	Model string `json:"model"`
+	// CPU architecture. x86, arm.
+	Architecture string `json:"architecture"`
+	// Platform bitness, one of 32, 64.
+	Bitness string `json:"bitness"`
+	// Emulate winodws 32 on 64 bit platform.
+	Wow64 bool `json:"wow64"`
+}
+
+type Brand struct {
+	// Browser brand name. e.g. Chrome, Firefox.
+	Brand string `json:"brand"`
+	// Version of the browser. e.g. 123, 123.0.4.1
+	Version string `json:"version"`
 }
 
 // PerfLoggingPreferences specifies configuration options for performance
