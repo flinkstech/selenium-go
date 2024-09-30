@@ -371,7 +371,7 @@ var chromeCapabilityNames = []string{
 }
 
 // Create a W3C-compatible capabilities instance.
-func newW3CCapabilities(caps Capabilities) Capabilities {
+func NewW3CCapabilities(caps Capabilities) Capabilities {
 	isValidW3CCapability := map[string]bool{}
 	for _, name := range w3cCapabilityNames {
 		isValidW3CCapability[name] = true
@@ -409,6 +409,14 @@ func newW3CCapabilities(caps Capabilities) Capabilities {
 	}
 }
 
+// Prepare a payload for the remote end that contains both the W3C-compliant and legacy payload format.
+func NewCapabilitiesPayload(caps Capabilities) map[string]Capabilities {
+	return map[string]Capabilities{
+		"capabilities":        NewW3CCapabilities(caps),
+		"desiredCapabilities": caps,
+	}
+}
+
 func (wd *remoteWD) NewSession() (string, error) {
 	// Detect whether the remote end complies with the W3C specification:
 	// non-compliant implementations use the top-level 'desiredCapabilities' JSON
@@ -423,7 +431,7 @@ func (wd *remoteWD) NewSession() (string, error) {
 		params map[string]interface{}
 	}{
 		{map[string]interface{}{
-			"capabilities":        newW3CCapabilities(wd.capabilities),
+			"capabilities":        NewW3CCapabilities(wd.capabilities),
 			"desiredCapabilities": wd.capabilities,
 		}},
 		{map[string]interface{}{
